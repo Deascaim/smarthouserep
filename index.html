@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHouse</title>
+    <link rel="stylesheet" href="./pages/index.css" >
+<style>
+body {
+    font-family: sans-serif;
+    }
+    .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    }
+    button {
+    font-size: 1.5em;
+    margin: 10px;
+    padding: 10px;
+    background-color: lightgray; /* Set the initial background color */
+    }
+    button.on {
+    background-color: green; /* Set the background color when the LED is ON */
+    }
+    input[type=range] {
+    width: 50%;
+    }
+    </style>
+    </head>
+    <body>
+    <div class="container">
+    <h1>ESP32 Web Server</h1>
+    
+    
+    <h3>LED1 State Control</h3>
+    <button id="button" onclick="toggleLED()">LED: OFF</button>
+
+    <h3>LED2 Brightness Control</h3>
+    <input type="range" id="trackbar" min="0" max="255" step="1" value="0" oninput="setBrightness()">
+
+    <h3>fan</h3>
+    <button id="button" onclick="toggleLED()">FAN: OFF</button>
+    
+    <h3>door</h3>
+    <button id="button" onclick="toggleLED()">door: OFF</button>
+
+    <h3>dight</h3>
+    <button id="button" onclick="toggleLED()">dight: OFF</button>
+
+
+    
+    
+    
+    
+    </div>
+    <script>
+    const addr = "http://192.168.174.99";
+    var ledState = false;
+    var fanState = false;
+    var doorState = false;
+    var ledBrightness = 0;
+    var button = document.getElementById('button');
+    var trackbar = document.getElementById('trackbar');
+    
+    // /fan
+    // /pump
+    // /door
+    // /dight
+    // /colour
+    
+    
+    // Temperature and Humidity /temp
+    // Illumination /illum
+    // Oxygen sensor /oxygen
+    // Water level sensor /waterlevel
+    
+    async function toggleLED() {
+    try {
+    
+    const response = await fetch(`${addr}/led?state=${(!ledState ? '1' : '0')}`);
+    if (!response.ok) {
+    throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    ledState = data.state;
+    button.innerText = 'LED: ' + (ledState ? 'ON':'OFF');
+    button.classList.toggle('on', ledState);
+    console.log(data);
+    //alert("Успешно");
+    }
+    catch (error) {
+    console.log(error);
+    }
+    }
+
+    
+    
+    function setBrightness() {
+    ledBrightness = trackbar.value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', addr + '/brightness?value=' + ledBrightness, true);
+    xhr.send();
+    }
+
+
+    async function toggleFAN() {
+    try {
+    
+    const response = await fetch(`${addr}/fan?state=${(!fanState ? '1' : '0')}`);
+    if (!response.ok) {
+    throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    fanState = data.state;
+    button.innerText = 'FAN: ' + (fanState ? 'ON':'OFF');
+    button.classList.toggle('on', fanState);
+    console.log(data);
+    //alert("Успешно");
+    }
+    catch (error) {
+    console.log(error);
+    }
+    }
+
+   /* function setFanCondition() {
+    fanCondition = trackbar.value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', addr + '/brightness?value=' + fanCondition, true);
+    xhr.send();
+    }*/
+
+    async function toggleDOOR() {
+    try {
+    
+    const response = await fetch(`${addr}/fan?state=${(!doorState ? '1' : '0')}`);
+    if (!response.ok) {
+    throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    doorState = data.state;
+    button.innerText = 'FAN: ' + (doorState ? 'ON':'OFF');
+    button.classList.toggle('on', doorState);
+    console.log(data);
+    //alert("Успешно");
+    }
+    catch (error) {
+    console.log(error);
+    }
+    }
+
+    
+
+    </script>
+    </body>
+
+
+
+<!--<body>
+    <input id="circle-color" type="color" name="circleColor" value="#e0e0e0">
+    <input id="progressrange" type="range" name="progress" value="79" min="0" max="100" oninput="progressnumber.value=value">
+    <input id="progressnumber" type="number" name="progress" value="79" min="0" max="100" oninput="progressrange.value=value">
+
+    <svg width="200" height="200" viewBox="-25 -25 250 250" 
+    version="1.1" xmlns="http://www.w3.org/2000/svg" 
+    style="transform:rotate(-90deg)">
+        <circle 
+            r="90" cx="100" cy="100" 
+            fill="transparent" stroke="#e0e0e0" 
+            stroke-width="16px" stroke-dasharray="565.48px" 
+            stroke-dashoffset="0">
+        </circle>
+        <circle 
+            r="90" cx="100" cy="100" 
+            stroke="#76e5b1" stroke-width="16px" 
+            stroke-linecap="round" stroke-dashoffset="118.692px" 
+            fill="transparent" stroke-dasharray="565.48px">
+        </circle>
+        <text x="71px" y="115px" fill="#6bdba7" 
+            font-size="52px" font-weight="bold" 
+            style="transform:rotate(90deg) translate(0px, -196px)">
+        79</text>
+      </svg>
+</body>-->
+</html>
